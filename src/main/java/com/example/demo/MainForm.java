@@ -41,6 +41,19 @@ public class MainForm {
     private JTextArea txtBlastResult;
     private JButton btnBlast;
     private JComboBox cbBund;
+    private JTextField txtId;
+    private JTextField txtTitle;
+    private JTextField txtDateTime;
+    private JTextField txtAdvancedInfo;
+    private JTextField txtAirPressure;
+    private JTextField txtAirTemperature;
+    private JComboBox cbAtmosphereState;
+    private JTextField txtCloudiness;
+    private JTextField txtWeatherDateTime;
+    private JTextField txtPrecipitation;
+    private JTextField txtWindDirection;
+    private JTextField txtWindSpeed;
+    private JCheckBox cbxSnowCover;
     private final KamiClient kamiClient;
 
 
@@ -55,7 +68,22 @@ public class MainForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AhovRdTask ahovRdTask = (AhovRdTask) MainForm.this.kamiClient.getAhov().getExecuteResult();
+                    AhovRdTask ahovRdTask = (AhovRdTask) kamiClient.getAhov(cbBund.getSelectedItem().toString(),
+                            Double.valueOf(txtHeight.getText()),
+                            Double.valueOf(txtArea.getText()),
+                            txtChemicalAgentName.getText(),
+                            Double.valueOf(txtChemLatitude.getText()),
+                            Double.valueOf(txtChemLongitude.getText()),
+                            Double.valueOf(txtQuantity.getText()),
+                            txtQuantityUnit.getText(),
+                            cbxIsPopulationInformed.isSelected(),
+                            txtPredictionDateTime.getText(),
+                            Long.valueOf(txtStartNeutralizationTime.getText()),
+                            Long.valueOf(txtTimeToNeutralization.getText()),
+                            Double.valueOf(txtFillingTime.getText()),
+                            Double.valueOf(txtTravelTime.getText()),
+                            Double.valueOf(txtVolume.getText()),
+                            Double.valueOf(txtWorkTime.getText())).getExecuteResult();
                     txtAhovResult.setText(ahovRdTask.getResults().toString());
                 } catch (DatatypeConfigurationException e1) {
                     e1.printStackTrace();

@@ -11,6 +11,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,29 +22,50 @@ import java.util.GregorianCalendar;
 
 public class KamiClient extends WebServiceGatewaySupport {
 
-    public ExecuteResponse getAhov() throws DatatypeConfigurationException, ParseException {
+    public ExecuteResponse getAhov(String bund, double height, double area, String chemicalAgentName, double latitude, double longitude, double quantity, String quantityUnit, boolean isPopulationInformed, String predictionDateTime, long startNeutralizationTime, long timeToNeutralization, double fillingTime, double travelTime, double volume, double workTime) throws DatatypeConfigurationException, ParseException {
+
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date date = format.parse("2014-04-24 11:15:00");
+        Date date = format.parse(predictionDateTime);
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(date);
-        XMLGregorianCalendar xmlGregCal =  DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        XMLGregorianCalendar xmlGregCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+
         ChemicalStorage cs = new ChemicalStorage();
-        cs.setBund(null);
-        cs.setChemicalAgentName("Хлор");
-        cs.setLatitude(57.526592);
-        cs.setLongitude(38.319372);
-        cs.setQuantity(100);
+        switch (bund) {
+            case "Отдельный":
+                SeparateBund separateBund = new SeparateBund();
+                separateBund.setHeight(height);
+                cs.setBund(separateBund);
+                break;
+            case "Общий":
+                GroupBund groupBund = new GroupBund();
+                groupBund.setArea(area);
+                cs.setBund(groupBund);
+                break;
+            default:
+                cs.setBund(null);
+                break;
+        }
+        cs.setChemicalAgentName(chemicalAgentName);
+        cs.setLatitude(latitude);
+        cs.setLongitude(longitude);
+        cs.setQuantity(quantity);
+        cs.setQuantityUnit(quantityUnit);
+
         VehicleCharacteristics vc = new VehicleCharacteristics();
-        vc.setFillingTime((double) 10);
-        vc.setTravelTime((double) 15);
-        vc.setVolume((double) 10);
-        vc.setWorkTime((double) 30);
+        vc.setFillingTime(fillingTime);
+        vc.setTravelTime(travelTime);
+        vc.setVolume(volume);
+        vc.setWorkTime(workTime);
+        vc.setUnit("мин");
+
         AhovRdTask request = new AhovRdTask();
-        request.setIsPopulationInformed(true);
+        request.setIsPopulationInformed(isPopulationInformed);
         request.setPredictionDateTime(xmlGregCal);
         request.setChemicalStorage(cs);
-        //request.setVehicleCharacteristics(new JAXBElement<VehicleCharacteristics>(new QName(VehicleCharacteristics.class.getSimpleName()),VehicleCharacteristics.class,vc));
-
+        request.setVehicleCharacteristics(vc);
+        request.setStartNeutralizationTime(DatatypeFactory.newInstance().newDuration(Duration.ofMinutes(startNeutralizationTime).toString()));
+        request.setTimeToNeutralization(DatatypeFactory.newInstance().newDuration(Duration.ofMinutes(timeToNeutralization).toString()));
         Execute e = new Execute();
         e.setTask(request);
 
