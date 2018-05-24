@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.common.AhovRdForces;
 import com.example.demo.common.AhovRdTask;
 import com.example.demo.common.BlastTask;
 import com.example.demo.webservice.KamiClient;
@@ -7,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
-import javax.xml.datatype.DatatypeConfigurationException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 
 @Component
 public class MainForm {
@@ -31,7 +30,7 @@ public class MainForm {
     private JTextField txtTravelTime;
     private JTextField txtVolume;
     private JTextField txtWorkTime;
-    private JTextArea txtAhovResult;
+    private JTextArea txtResult;
     private JCheckBox cbxIsPopulationInformed;
     private JTextField txtBeginningRescueOperation;
     private JTextField txtDurationRescueOperation;
@@ -39,7 +38,6 @@ public class MainForm {
     private JTextField txtBlastLatitude;
     private JTextField txtBlastLongitude;
     private JTextField txtMassOfAgent;
-    private JTextArea txtBlastResult;
     private JButton btnBlast;
     private JComboBox cbBund;
     private JTextField txtId;
@@ -57,11 +55,19 @@ public class MainForm {
     private JCheckBox cbxSnowCover;
     private JCheckBox cbxVehicle;
     private JCheckBox cbxWeather;
+    private JPanel resultPanel;
     private final KamiClient kamiClient;
-
 
     public JPanel getPanel() {
         return panel;
+    }
+
+    public JTextArea getTxtResult() {
+        return txtResult;
+    }
+
+    public JPanel getResultPanel() {
+        return resultPanel;
     }
 
     @Autowired
@@ -102,7 +108,93 @@ public class MainForm {
                             txtWindSpeed.getText(),
                             txtWindDirection.getText(),
                             cbxSnowCover.isSelected()).getExecuteResult();
-                    txtAhovResult.setText(ahovRdTask.getResults().toString());
+
+                    final String[] zones = {"Зоны, границы которой определены моментом времени и значением параметра" + "\n"};
+                    if (ahovRdTask.getResults().getZones() != null) {
+                        ahovRdTask.getResults().getZones().getZone().forEach(v -> {
+                            zones[0] = zones[0] + "Наименование: " + v.getName() + "; \n" +
+                                    "Дата/время: " + v.getDateTime().toString() + "; \n" +
+                                    "Наименование группы: " + v.getGroup() + "; \n" +
+                                    "Значение определяющее границы зоны: " + v.getValue() + "; \n" +
+                                    "Единицы измерения: " + v.getUnits() + "; \n" +
+                                    "Зона, представленная в формате WKT: " + v.getWkt() + "; \n" +
+                                    "Порядок отображения зоны на карте: " + v.getZOrder() + "; \n";
+                        });
+                    }
+                    final String[] populationLoss = {"Население в зоне ЧС" + "\n"};
+                    if (ahovRdTask.getResults().getPopulationLoss() != null) {
+                        ahovRdTask.getResults().getPopulationLoss().getAccidentZonePopulation().forEach(v -> {
+                            populationLoss[0] = populationLoss[0] + "Наименование: " + v.getName() + "; \n" +
+                                    "Доля площади поражения, %: " + v.getAffectedArea() + "; \n" +
+                                    "Население в зоне ЧС: " + v.getPopulationInAccidentZone() + "; \n";
+                            if (v.getAffectedPeopleInfo() != null) {
+                                populationLoss[0] = populationLoss[0] + "Количество пострадавших: " + v.getAffectedPeopleInfo().getAffectedPeople() + "; \n" +
+                                        "Дата/время : " + v.getAffectedPeopleInfo().getDateTime().toString() + "; \n";
+                                if (v.getAffectedPeopleInfo().getCasualties() != null) {
+                                    populationLoss[0] = populationLoss[0] + "Тяжелые повреждения: " + v.getAffectedPeopleInfo().getCasualties().getSeriouslyInjured() + "; \n" +
+                                            "Легкие повреждения: " + v.getAffectedPeopleInfo().getCasualties().getSlightlyInjured() + "; \n" +
+                                            "Ранено: " + v.getAffectedPeopleInfo().getCasualties().getInjured() + "; \n" +
+                                            "Убито: " + v.getAffectedPeopleInfo().getCasualties().getKilled() + "; \n";
+                                }
+                            }
+                        });
+                    }
+                    final String[] warningZone = {"Зона оповещения" + "\n" +
+                            "Код системы координат зоны оповещения: " + ahovRdTask.getResults().getWarningZone().getCoordSystemCode() + "; \n" +
+                            "Тип задействованной системы оповещения оповещения: " + ahovRdTask.getResults().getWarningZone().getWarningSystemType() + "; \n" +
+                            "Зона оповещения в формате wkt: " + ahovRdTask.getResults().getWarningZone().getWkt() + "; \n" +
+                            "Список муниципальных образований, которые должны быть оповещены, в случае, если задействованы системы оповещения уровней местная или территориальная: " + "\n"};
+                    if (ahovRdTask.getResults().getWarningZone() != null) {
+                        ahovRdTask.getResults().getWarningZone().getMuniсipalityNames().getString().forEach(v -> {
+                            warningZone[0] = warningZone[0] + v + "; \n";
+                        });
+                    }
+
+                    AhovRdForces ahovRdForces = (AhovRdForces) ahovRdTask.getResults().getForces();
+                    String forces = "";
+                    if (ahovRdForces != null) {
+                        forces = "Количество необходимых противогазов: " + ahovRdForces.getGasMaskQuantity() + "; \n" +
+                                "Марки противогазов, используемых для защиты: " + ahovRdForces.getMarkGasMask() + "; \n";
+                        if (ahovRdForces.getNeutralization() != null) {
+                            forces = "Силы и средства, необходимые для обезвреживания АХОВ: \n" +
+                                    "Количество машин для нейтрализации, шт: " + ahovRdForces.getNeutralization().getCisternQuantity() + "; \n" +
+                                    "Количество машинорейсов с растворами, шт: " + ahovRdForces.getNeutralization().getCisternRoutQuantity() + "; \n" +
+                                    "Наименование нейтрализатора : " + ahovRdForces.getNeutralization().getNeutralizerName() + "; \n" +
+                                    "Единицы измерения нейтрализатора: " + ahovRdForces.getNeutralization().getNeutralizerUnit() + "; \n" +
+                                    "Количество раствора, т: " + ahovRdForces.getNeutralization().getNeutralizerVolume() + "; \n" +
+                                    "Время цикла машины для нейтрализации, мин." + ahovRdForces.getNeutralization().getTimeOfCisternWorkCycle() + "; \n";
+                        }
+                        if (ahovRdForces.getWaterCurtain() != null) {
+                            forces = "Силы и средства, необходимые для постановки водяной завесы: \n" +
+                                    "Количество машин в смене: " + ahovRdForces.getWaterCurtain().getMachinesQuantityInShift() + "; \n" +
+                                    "Общее количество машин: " + ahovRdForces.getWaterCurtain().getMachinesTotalQuantity() + "; \n" +
+                                    "Интенсивность подачи нейтрализатора, т/мин: " + ahovRdForces.getWaterCurtain().getNeutralizerFlowRate() + "; \n" +
+                                    "Количество нейтрализатора, т: " + ahovRdForces.getWaterCurtain().getNeutralizerQuantity() + "; \n" +
+                                    "Продолжительность завесы, мин: " + ahovRdForces.getWaterCurtain().getTimeOfCurtain() + "; \n";
+                        }
+                    }
+                    txtResult.setText("Химическое поражение:" + "\n" +
+                            "Глубина зоны заражения для первичного облака, км: " + ahovRdTask.getResults().getDepthContaminationZone1() + "; \n" +
+                            "Глубина зоны заражения для вторичного облака, км: " + ahovRdTask.getResults().getDepthContaminationZone2() + "; \n" +
+                            "Общая глубина зоны заражения, км: " + ahovRdTask.getResults().getDepthContaminationZoneAll() + "; \n" +
+                            "Время испарения АХОВ с площади разлива, ч.: " + ahovRdTask.getResults().getDurationExposureSource() + "; \n" +
+                            "Эквивалентное количество вещества во первичном облаке, т.: " + ahovRdTask.getResults().getQuantity1() + "; \n" +
+                            "Эквивалентное количество вещества во вторичном облаке, т.: " + ahovRdTask.getResults().getQuantity2() + "; \n" +
+                            "Площадь зоны фактического заражения первичного облака, кв. км: " + ahovRdTask.getResults().getSActual1() + "; \n" +
+                            "Площадь зоны фактического заражения вторичного облака, кв. км: " + ahovRdTask.getResults().getSActual2() + "; \n" +
+                            "Площадь зоны фактического заражения, кв. км Общая: " + ahovRdTask.getResults().getSActualAll() + "; \n" +
+                            "Площадь зоны возможного заражения для первичного облака, кв. км: " + ahovRdTask.getResults().getSPossible1() + "; \n" +
+                            "Площадь зоны возможного заражения для вторичного облака, кв. км: " + ahovRdTask.getResults().getSPossible2() + "; \n" +
+                            "Результат аварии:\n" +
+                            "Масштаб ЧС: " + ahovRdTask.getResults().getCSScale() + "; \n" +
+                            "Площадь зоны поражения: " + ahovRdTask.getResults().getDamageZoneArea() + "; \n" +
+                            "Периметр зоны поражения: " + ahovRdTask.getResults().getDamageZonePerimeter() + "; \n" +
+                            "ЧС имеет место: " + ahovRdTask.getResults().isIsEmergencySituation() + "; \n" +
+                            populationLoss[0] +
+                            zones[0] +
+                            warningZone[0] +
+                            "Силы и средства:\n" +
+                            forces);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                     JOptionPane.showMessageDialog(null, e1.getMessage());
@@ -133,7 +225,7 @@ public class MainForm {
                             txtWindSpeed.getText(),
                             txtWindDirection.getText(),
                             cbxSnowCover.isSelected()).getExecuteResult();
-                    txtAhovResult.setText(blastTask.getResult().toString());
+                    txtResult.setText(blastTask.getResult().toString());
                 } catch (Exception e1) {
                     e1.printStackTrace();
                     JOptionPane.showMessageDialog(null, e1.getMessage());

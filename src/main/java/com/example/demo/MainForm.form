@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="710" height="608"/>
+      <xy x="20" y="20" width="710" height="623"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -285,7 +285,7 @@
               </component>
             </children>
           </grid>
-          <grid id="28972" layout-manager="GridLayoutManager" row-count="19" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="28972" layout-manager="GridLayoutManager" row-count="20" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="АХОВ"/>
@@ -458,6 +458,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <enabled value="false"/>
                   <text value="15"/>
                 </properties>
               </component>
@@ -468,6 +469,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <enabled value="false"/>
                   <text value="15"/>
                 </properties>
               </component>
@@ -478,6 +480,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <enabled value="false"/>
                   <text value="10"/>
                 </properties>
               </component>
@@ -488,6 +491,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <enabled value="false"/>
                   <text value="10"/>
                 </properties>
               </component>
@@ -547,22 +551,6 @@
                   <text value="Время работы цистерны,мин"/>
                 </properties>
               </component>
-              <component id="d8a0b" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Результат расчета:"/>
-                </properties>
-              </component>
-              <component id="9f33e" class="javax.swing.JTextArea" binding="txtAhovResult">
-                <constraints>
-                  <grid row="1" column="2" row-span="17" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
-                  </grid>
-                </constraints>
-                <properties/>
-              </component>
               <component id="56854" class="javax.swing.JComboBox" binding="cbBund">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
@@ -614,13 +602,13 @@
                   <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <selected value="true"/>
-                  <text value="Учитывать"/>
+                  <selected value="false"/>
+                  <text value="Не учитывать"/>
                 </properties>
               </component>
               <component id="36f46" class="javax.swing.JButton" binding="btnAhov">
                 <constraints>
-                  <grid row="18" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="19" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Расчитать"/>
@@ -628,12 +616,12 @@
               </component>
               <vspacer id="a65bc">
                 <constraints>
-                  <grid row="17" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                  <grid row="17" column="0" row-span="2" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
               </vspacer>
               <component id="417ae" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="17" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="18" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="* - обязательные поля для заполнения"/>
@@ -762,22 +750,6 @@
                   <text value="Масса вещества, кг"/>
                 </properties>
               </component>
-              <component id="8ae62" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Результат расчета:"/>
-                </properties>
-              </component>
-              <component id="b3aa" class="javax.swing.JTextArea" binding="txtBlastResult">
-                <constraints>
-                  <grid row="1" column="2" row-span="6" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="50"/>
-                  </grid>
-                </constraints>
-                <properties/>
-              </component>
               <component id="9e99" class="javax.swing.JButton" binding="btnBlast">
                 <constraints>
                   <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -792,6 +764,26 @@
                 </constraints>
                 <properties>
                   <text value="* - обязательные поля для заполнения"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="8c212" binding="resultPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title="Результат"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="e808e" class="javax.swing.JTextArea" binding="txtResult">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <lineWrap value="true"/>
                 </properties>
               </component>
             </children>

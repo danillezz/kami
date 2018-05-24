@@ -18,6 +18,8 @@ public class SwingApp {
 
 		EventQueue.invokeLater(() -> {
 			MainForm f = ctx.getBean(MainForm.class);
+			JTextArea txtResult = f.getTxtResult();
+			JPanel resultPanel = f.getResultPanel();
 			JFrame frame = new JFrame("Расчетные задачи КАМИ");
 			frame.setContentPane(f.getPanel());
 			frame.setSize(800,600);
@@ -27,6 +29,11 @@ public class SwingApp {
 					System.exit(0);
 				}
 			});
+			JScrollPane scroll = new JScrollPane(txtResult);
+			scroll.setBounds(txtResult.getX(), txtResult.getY(), txtResult.getWidth(), txtResult.getHeight());
+			scroll.setVerticalScrollBarPolicy (ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			resultPanel.add(scroll);
 		});
 	}
 }
