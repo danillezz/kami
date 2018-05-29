@@ -98,7 +98,7 @@ public class KamiClient extends WebServiceGatewaySupport {
     }
 
     //-------------расчет задачи АХОВ-----------------------------------------------------------------------------------
-    public ExecuteResponse getAhov(String bund, String height, String area, String chemicalAgentName, String latitude, String longitude, String quantity, String quantityUnit, boolean isPopulationInformed, String predictionDateTime, String startNeutralizationTime, String timeToNeutralization, boolean isVehicleEnabled, String fillingTime, String travelTime, String volume, String workTime, String id, String title, String dateTime, String advancedInfo, boolean isWeatherEnabled, String airPressure, String airTemperature, String atmosphereState, String cloudiness, String weatherDateTime, String precipitation, String windSpeed, String windDirection, boolean snowCover) throws Exception {
+    public ExecuteResponse getAhov(String bund, String height, String area, String chemicalAgentName, String latitude, String longitude, String quantity, String quantityUnit, boolean isPopulationInformed, String predictionDateTime, String startNeutralizationTime, String timeToNeutralization, String id, String title, String dateTime, String advancedInfo, boolean isWeatherEnabled, String airPressure, String airTemperature, String atmosphereState, String cloudiness, String weatherDateTime, String precipitation, String windSpeed, String windDirection, boolean snowCover) throws Exception {
         ChemicalStorage cs = new ChemicalStorage();
         switch (bund) {
             case "Отдельный":
@@ -142,31 +142,6 @@ public class KamiClient extends WebServiceGatewaySupport {
             throw new Exception("Заполните поле Дата/время прогнозирования*");
 
         request.setChemicalStorage(cs);
-        if (isVehicleEnabled) {
-            VehicleCharacteristics vc = new VehicleCharacteristics();
-            try {
-                vc.setFillingTime(Double.valueOf(fillingTime));
-            } catch (Exception ignored) {
-
-            }
-            try {
-                vc.setTravelTime(Double.valueOf(travelTime));
-            } catch (Exception ignored) {
-
-            }
-            try {
-                vc.setVolume(Double.valueOf(volume));
-            } catch (Exception ignored) {
-
-            }
-            try {
-                vc.setWorkTime(Double.valueOf(workTime));
-            } catch (Exception ignored) {
-
-            }
-            vc.setUnit("мин");
-            request.setVehicleCharacteristics(vc);
-        }
         try {
             request.setStartNeutralizationTime(DatatypeFactory.newInstance().newDuration(Duration.ofMinutes(Long.valueOf(startNeutralizationTime)).toString()));
         } catch (Exception ignored) {
